@@ -1,0 +1,249 @@
+:root {
+  --main-color: #ff3c3c;
+  --bg-color: #0d0d0d;
+  --card-color: #1a1a1a;
+  --text-color: #ffffff;
+  --text-muted: #cccccc;
+  --input-border: #ff3c3c;
+  --radius: 18px;
+  --shadow: 0 0 30px rgba(255, 60, 60, 0.25);
+}
+
+body.login-page {
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  color: var(--text-color);
+  overflow: hidden;
+  position: relative;
+}
+
+body.login-page::before,
+body.login-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(180px);
+  background: rgba(255, 0, 0, 0.08);
+  z-index: 0;
+}
+body.login-page::before {
+  width: 500px;
+  height: 500px;
+  top: -150px;
+  left: -150px;
+}
+body.login-page::after {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  right: -100px;
+}
+
+.login-box {
+  background: var(--card-color);
+  padding: 40px 30px;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+
+.login-box h1 {
+  text-align: center;
+  color: var(--main-color);
+  margin-bottom: 25px;
+  font-size: 2rem;
+}
+
+.input-box {
+  margin-bottom: 20px;
+}
+
+.input-box label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 2px solid var(--input-border);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input-box input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-box input:focus {
+  border-bottom-color: var(--main-color);
+  outline: none;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--main-color);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.btn-login:hover {
+  background-color: #ff5c5c;
+  transform: scale(1.02);
+}
+
+.links {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.links a {
+  color: var(--main-color);
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.info-text.login {
+  text-align: center;
+  margin-top: 20px;
+  z-index: 1;
+}
+
+.info-text h2 {
+  color: var(--main-color);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.info-text p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+/* Titres */
+h1, h2 {
+  text-align: center;
+  color: var(--main-color);
+  margin-bottom: 20px;
+}
+
+/* Formulaire de filtre */
+form {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+form select,
+form input[type="submit"] {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background-color: var(--card-color);
+  color: var(--text-color);
+  margin: 5px;
+}
+
+form input[type="submit"]:hover {
+  background-color: #ff5c5c;
+  cursor: pointer;
+}
+
+/* Conteneur de cartes */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Carte objet */
+.card {
+  background-color: var(--card-color);
+  color: var(--text-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 6px 0;
+}
+
+/* Statuts */
+.statut {
+  font-weight: bold;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.statut.emprunte {
+  color: #ff4d4d;
+}
+
+.statut.disponible {
+  color: #39ff14;
+}
+
+/* Lien de déconnexion */
+a {
+  color: var(--main-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ff7f7f;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+}
