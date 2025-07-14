@@ -18,6 +18,7 @@ function initialiser()
 {
     session_start();
 
+    // Sécurité : redirection si la session n’est pas active
     if (!isset($_SESSION['id_membre'])) {
         header("Location: ../page/Login.php");
         exit;
@@ -25,15 +26,17 @@ function initialiser()
 
     $conn = dbconnect();
 
-    // Récupération des catégories depuis Cat_categorie_objet
+    // Récupération des catégories
     $catResult = mysqli_query($conn, "SELECT * FROM Cat_categorie_objet");
     $categories = [];
-    while ($row = mysqli_fetch_assoc($catResult)) {
-        $categories[] = $row;
+    if ($catResult) {
+        while ($row = mysqli_fetch_assoc($catResult)) {
+            $categories[] = $row;
+        }
     }
 
-    // Filtrage par catégorie
-    $filtre = isset($_GET['categorie']) ? $_GET['categorie'] : '';
+    // Traitement du filtre (assainir)
+    $filtre = isset($_GET['categorie']) && is_numeric($_GET['categorie']) ? intval($_GET['categorie']) : '';
     $objets = [];
 
     if ($filtre !== '') {
@@ -44,9 +47,11 @@ function initialiser()
             JOIN Cat_Membres m ON o.id_membre = m.id_Membre
             WHERE o.id_categorie = ?
         ");
-        mysqli_stmt_bind_param($stmt, 'i', $filtre);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 'i', $filtre);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+        }
     } else {
         $result = mysqli_query($conn, "
             SELECT o.*, c.nom_categorie, m.Nom AS nom_proprietaire
@@ -56,8 +61,10 @@ function initialiser()
         ");
     }
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        $objets[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $objets[] = $row;
+        }
     }
 
     return [
@@ -67,4 +74,5 @@ function initialiser()
         'objets' => $objets
     ];
 }
+
 ?>

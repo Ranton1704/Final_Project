@@ -44,10 +44,7 @@
 </div>
 
 
-<div class="info-text login">
-      <h2 class="animation" style="--i:0; --j:20;">Welcome Back!</h2>
-      <p class="animation" style="--i:0; --j:21;">Already a Member? Please Login.</p>
- </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
