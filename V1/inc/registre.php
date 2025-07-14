@@ -1,5 +1,5 @@
 <?php
-require("connection.php");
+require("function.php");
 if (dbconnect()) {
     if (isset($_POST['email']) && isset($_POST['motdepasse']) && isset($_POST['nom']) && isset($_POST['datedenaissance'])) {
         $email = $_POST['email'];

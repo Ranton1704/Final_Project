@@ -1,0 +1,110 @@
+:root {
+    --main-color: #ff3c3c;
+    --bg-color: #0d0d0d;
+    --card-color: #1a1a1a;
+    --text-color: #ffffff;
+    --text-muted: #cccccc;
+    --shadow: 0 0 25px rgba(255, 60, 60, 0.25);
+    --border-radius: 18px;
+    --input-border: #ff3c3c;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #0d0d0d, #1a1a1a);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    position: relative;
+  }
+  
+  /* Glowing circle background (optional and animated) */
+  body::before, body::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    z-index: 0;
+    filter: blur(80px);
+  }
+  body::before {
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 60, 60, 0.05);
+    top: -100px;
+    left: -100px;
+  }
+  body::after {
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 60, 60, 0.08);
+    bottom: -120px;
+    right: -120px;
+  }
+  
+  .form-container {
+    background-color: var(--card-color);
+    padding: 40px 30px;
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 450px;
+    z-index: 1;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  .form-container h1 {
+    color: var(--main-color);
+    font-weight: 600;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .form-label {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  
+  .form-control {
+    background-color: transparent;
+    color: var(--text-color);
+    border: none;
+    border-bottom: 2px solid var(--input-border);
+    border-radius: 0;
+    padding: 10px 10px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .form-control:focus {
+    border-bottom-color: var(--main-color);
+    box-shadow: none;
+    background-color: transparent;
+    outline: none;
+  }
+  
+  .btn-red {
+    background-color: var(--main-color);
+    color: #fff;
+    padding: 12px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.2s;
+  }
+  
+  .btn-red:hover {
+    background-color: #ff5c5c;
+    transform: scale(1.02);
+  }

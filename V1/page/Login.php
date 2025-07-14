@@ -1,5 +1,5 @@
 <?php
-    require("../inc/connection.php");
+    require("../inc/function.php");
     dbconnect();
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body class="login-page">
 
@@ -26,7 +26,7 @@
 
     <form action="../inc/verification.php" method="post">
         <div class="input-box">
-            <label for="email"><i class="bi bi-person-fill"></i> Username</label>
+            <label for="email"><i class="bi bi-person-fill"></i> Mail</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
         <div class="input-box">
