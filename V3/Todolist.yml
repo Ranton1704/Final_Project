@@ -1,0 +1,11 @@
+-creer un le base de donne du project
+  -creer les differents tables
+  -creer les inserts d'exemple
+-creer un page Login 
+  -Moyen d'entre un les emails et mot de passe
+  -Creer un function verification pour verifier si l'emails et mot de passe sont corrects
+-creer un page inscription
+  -Moyen d'entre un les informations necessaire
+  -Creer un function registre pour enregistre les informations
+-creer un page Accueil
+  -
