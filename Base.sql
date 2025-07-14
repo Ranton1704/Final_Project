@@ -1,48 +1,68 @@
-create database Base;
-use Base;
-create table Cat_Membres(
-    int  id_Membre,
-    varchar(150) Nom,
-    date date_de_naissance,
-    varchar(50) genre,
-    varchar(100) email,
-    varchar(50) mdp,
-    varchar(50)image_profil
-)
-create table Cat_categorie_objet(
-    int id_categorie,
-    varchar(150) nom_categorie
+-- Création de la base
+CREATE DATABASE IF NOT EXISTS Base;
+USE Base;
 
-)
-create table Cat_objet(
-    int id_objet,
-    varchar(150) nom_objet,
-    int id_categorie,
-    int id_membre
-)
-create table Cat_images_objet(
-    int id_image,
-    int id_objet,
-    varchar(150) nom_image
+-- Table membres
+CREATE TABLE Cat_Membres (
+    id_Membre INT AUTO_INCREMENT PRIMARY KEY,
+    Nom VARCHAR(150),
+    date_de_naissance DATE,
+    genre VARCHAR(50),
+    email VARCHAR(100),
+    ville VARCHAR(50),
+    mdp VARCHAR(50),
+    image_profil VARCHAR(50)
+);
 
-)
-create table Cat_emprunt(
-    int id_emprunt,
-    int id_objet,
-    int id_membre,
-    date date_emprunt,
-    date date_retour
-)
+-- Table catégorie objet
+CREATE TABLE Cat_categorie_objet (
+    id_categorie INT AUTO_INCREMENT PRIMARY KEY,
+    nom_categorie VARCHAR(150)
+);
+
+-- Table objet
+CREATE TABLE Cat_objet (
+    id_objet INT AUTO_INCREMENT PRIMARY KEY,
+    nom_objet VARCHAR(150),
+    id_categorie INT,
+    id_membre INT,
+    FOREIGN KEY (id_categorie) REFERENCES Cat_categorie_objet(id_categorie),
+    FOREIGN KEY (id_membre) REFERENCES Cat_Membres(id_Membre)
+);
+
+-- Table images objet
+CREATE TABLE Cat_images_objet (
+    id_image INT AUTO_INCREMENT PRIMARY KEY,
+    id_objet INT,
+    nom_image VARCHAR(150),
+    FOREIGN KEY (id_objet) REFERENCES Cat_objet(id_objet)
+);
+
+-- Table emprunt
+CREATE TABLE Cat_emprunt (
+    id_emprunt INT AUTO_INCREMENT PRIMARY KEY,
+    id_objet INT,
+    id_membre INT,
+    date_emprunt DATE,
+    date_retour DATE,
+    FOREIGN KEY (id_objet) REFERENCES Cat_objet(id_objet),
+    FOREIGN KEY (id_membre) REFERENCES Cat_Membres(id_Membre)
+);
+
+-- Insertion des catégories
 INSERT INTO Cat_categorie_objet (nom_categorie) VALUES
 ('Esthétique'),
 ('Bricolage'),
 ('Mécanique'),
 ('Cuisine');
-INSERT INTO Cat_Membres (nom, date_naissance, genre, email, ville, mdp, image_profil) VALUES
+
+-- Insertion des membres
+INSERT INTO Cat_Membres (Nom, date_de_naissance, genre, email, ville, mdp, image_profil) VALUES
 ('Alice', '2000-01-15', 'F', 'alice@example.com', 'Antananarivo', '123456', 'alice.jpg'),
 ('Bob', '1999-06-20', 'H', 'bob@example.com', 'Fianarantsoa', '123456', 'bob.jpg'),
 ('Clara', '2002-03-10', 'F', 'clara@example.com', 'Toamasina', '123456', 'clara.jpg'),
 ('David', '1998-12-05', 'H', 'david@example.com', 'Tuléar', '123456', 'david.jpg');
+
 -- Objets d'Alice (id_membre = 1)
 INSERT INTO Cat_objet (nom_objet, id_categorie, id_membre) VALUES
 ('Sèche-cheveux', 1, 1),
@@ -94,6 +114,9 @@ INSERT INTO Cat_objet (nom_objet, id_categorie, id_membre) VALUES
 ('Balance électronique', 4, 4),
 ('Poêle antiadhésive', 4, 4),
 ('Batteur électrique', 4, 4);
+
+-- Emprunts (attention : les id_objet doivent correspondre aux id générés automatiquement !)
+-- Ici on suppose que l'ordre d'insertion donne des id_objet allant de 1 à 40
 INSERT INTO Cat_emprunt (id_objet, id_membre, date_emprunt, date_retour) VALUES
 (5, 2, '2024-07-01', '2024-07-03'),
 (8, 3, '2024-07-02', NULL),
