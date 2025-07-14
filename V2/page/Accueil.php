@@ -108,8 +108,9 @@ $resImg = mysqli_stmt_get_result($stmt);
 $image = mysqli_fetch_assoc($resImg);
 
 if ($image) {
-    echo '<img src="../uploads/' . $image['nom_image'] . '" alt="Image Catégorie">';
+    echo '<img src="../uploads/' . ($image['fichier_image']) . '" alt="' . ($image['nom_image']) . '">';
 }
+
 
 
     $stmtStatut = mysqli_prepare($conn, "SELECT date_retour FROM Cat_emprunt WHERE id_objet = ? ORDER BY id_emprunt DESC LIMIT 1");

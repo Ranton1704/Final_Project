@@ -130,8 +130,9 @@ INSERT INTO Cat_emprunt (id_objet, id_membre, date_emprunt, date_retour) VALUES
 (38, 2, '2024-07-12', NULL),
 (40, 1, '2024-07-13', NULL);
 INSERT INTO Cat_images_categorie (id_categorie, nom_image, fichier_image) VALUES
-(1, '1.jpg' ,''),
-(2, '2.jpg' ,''),
-(3, '3.jpg' ,''),
-(4, '4.jpg' ,'');
+(1, 'Rasoir', '1.jpg'),
+(2, 'Boîte outils', '2.jpg'),
+(3, 'Clé à molette', '3.jpg'),
+(4, 'Aspirateur', '4.jpg');
+
 Alter table Cat_images_categorie add fichier_image varchar(150) not null;
