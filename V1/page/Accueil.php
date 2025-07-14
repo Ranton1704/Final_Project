@@ -14,40 +14,29 @@ $objets = $init['objets'];
 <head>
     <meta charset="UTF-8">
     <title>Accueil - Liste des Objets</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f7f7f7; }
-        h1, h2 { text-align: center; }
-        form { text-align: center; margin-bottom: 20px; }
-        .container { display: flex; flex-wrap: wrap; justify-content: center; }
-        .card {
-            width: 250px;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .btn {
-            margin-top: 10px;
-            padding: 6px 12px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-        .btn:hover { background-color: #218838; }
-        .statut { margin-top: 10px; font-weight: bold; }
-        .emprunte { color: red; }
-        .disponible { color: green; }
+    :root {
+    --main-color: #ff3c3c;
+    --bg-color: #0d0d0d;
+    --card-color: #1a1a1a;
+    --text-color: #ffffff;
+    --text-muted: #cccccc;
+    --input-border: #ff3c3c;
+    --radius: 18px;
+    --shadow: 0 0 30px rgba(255, 60, 60, 0.25);
+    }
+
+    body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--bg-color), #1a1a1a);
+    color: var(--text-color);
+    padding: 30px 20px;
+    min-height: 100vh;
+    }
     </style>
+    
 </head>
 <body>
 
@@ -76,7 +65,6 @@ $objets = $init['objets'];
 <?php foreach ($objets as $obj): ?>
  <div class="card">
     <?php
-    // Image de l'objet
     $stmtImg = mysqli_prepare($conn, "SELECT nom_image FROM Cat_images_objet WHERE id_objet = ?");
     mysqli_stmt_bind_param($stmtImg, 'i', $obj['id_objet']);
     mysqli_stmt_execute($stmtImg);
@@ -84,17 +72,14 @@ $objets = $init['objets'];
     $imageData = mysqli_fetch_assoc($resImg);
     $image = $imageData ? $imageData['nom_image'] : 'default.jpg';
 
-    // Récupération de la dernière ligne d’emprunt
     $stmtStatut = mysqli_prepare($conn, "SELECT date_retour FROM Cat_emprunt WHERE id_objet = ? ORDER BY id_emprunt DESC LIMIT 1");
     mysqli_stmt_bind_param($stmtStatut, 'i', $obj['id_objet']);
     mysqli_stmt_execute($stmtStatut);
     $resStatut = mysqli_stmt_get_result($stmtStatut);
     $statutData = mysqli_fetch_assoc($resStatut);
 
-    // Emprunté si pas encore retourné
     $isEmprunte = ($statutData && $statutData['date_retour'] === null);
 
-    // On veut aussi récupérer la date de retour SI l’objet est emprunté
     $dateRetour = null;
     if ($isEmprunte) {
         $stmtDate = mysqli_prepare($conn, "SELECT date_retour FROM Cat_emprunt WHERE id_objet = ? AND date_retour IS NULL ORDER BY id_emprunt DESC LIMIT 1");
