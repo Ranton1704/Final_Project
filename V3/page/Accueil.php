@@ -7,6 +7,33 @@ $conn = $init['conn'];
 $categories = $init['categories'];
 $filtre = $init['filtre'];
 $objets = $init['objets'];
+
+// TRAITEMENT DU FORMULAIRE D’EMPRUNT
+if (
+    isset($_POST['emprunter'], $_POST['id_objet'], $_POST['duree'])
+    && isset($_SESSION['id_membre'])
+) {
+    $id_objet = intval($_POST['id_objet']);
+    $duree = intval($_POST['duree']);
+    $id_membre = intval($_SESSION['id_membre']);
+
+    // Vérifier que l'objet n'est pas déjà emprunté
+    $req = mysqli_prepare($conn, "SELECT 1 FROM Cat_emprunt WHERE id_objet=? AND date_retour IS NULL");
+    mysqli_stmt_bind_param($req, 'i', $id_objet);
+    mysqli_stmt_execute($req);
+    $res = mysqli_stmt_get_result($req);
+    if (mysqli_fetch_assoc($res)) {
+        $emprunt_error = "Cet objet est déjà emprunté.";
+    } else {
+        $date_emprunt = date('Y-m-d');
+        $date_retour_prevu = date('Y-m-d', strtotime("+$duree days"));
+        $insert = mysqli_prepare($conn, "INSERT INTO Cat_emprunt (id_objet, id_membre, date_emprunt, date_retour, date_retour_prevu) VALUES (?, ?, ?, NULL, ?)");
+        mysqli_stmt_bind_param($insert, 'iiss', $id_objet, $id_membre, $date_emprunt, $date_retour_prevu);
+        mysqli_stmt_execute($insert);
+        header("Location: ".$_SERVER['REQUEST_URI']);
+        exit;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,12 +63,19 @@ $objets = $init['objets'];
             padding: 30px 20px;
             min-height: 100vh;
         }
+        .error-message { color: #ff3c3c; margin-bottom: 15px; font-weight: bold; }
+        .statut.emprunte { color: #ff3c3c; }
+        .statut.disponible { color: #44bb44; }
     </style>
 </head>
 <body>
 
+<?php if (isset($emprunt_error)): ?>
+    <div class="error-message"><?= htmlspecialchars($emprunt_error) ?></div>
+<?php endif; ?>
+
 <div class="welcome">
-    <h1>Bienvenue <?= ($_SESSION['Nom']) ?> !</h1>
+    <h1>Bienvenue <?= htmlspecialchars($_SESSION['Nom']) ?> !</h1>
     <a class="btn-deconnexion" href="../inc/deconnexion.php">
         <i class="fas fa-sign-out-alt"></i> Se déconnecter
     </a>
@@ -53,7 +87,7 @@ $objets = $init['objets'];
         <option value="">-- Toutes --</option>
         <?php foreach ($categories as $cat): ?>
             <option value="<?= $cat['id_categorie'] ?>" <?= ($filtre == $cat['id_categorie']) ? 'selected' : '' ?>>
-                <?= ($cat['nom_categorie']) ?>
+                <?= htmlspecialchars($cat['nom_categorie']) ?>
             </option>
         <?php endforeach; ?>
     </select>
@@ -68,7 +102,7 @@ $objets = $init['objets'];
             <label>Catégorie :</label><br>
             <select name="id_categorie" required>
                 <?php foreach ($categories as $cat): ?>
-                    <option value="<?= $cat['id_categorie'] ?>"><?= ($cat['nom_categorie']) ?></option>
+                    <option value="<?= $cat['id_categorie'] ?>"><?= htmlspecialchars($cat['nom_categorie']) ?></option>
                 <?php endforeach; ?>
             </select><br><br>
 
@@ -92,6 +126,7 @@ $objets = $init['objets'];
             <?php foreach ($objets as $obj): ?>
                 <div class="card">
                     <?php
+                    // Image
                     $stmt = mysqli_prepare($conn, "SELECT fichier_image, nom_image FROM Cat_images_categorie WHERE id_categorie = ? LIMIT 1");
                     mysqli_stmt_bind_param($stmt, 'i', $obj['id_categorie']);
                     mysqli_stmt_execute($stmt);
@@ -99,36 +134,37 @@ $objets = $init['objets'];
                     $image = mysqli_fetch_assoc($resImg);
 
                     if ($image && !empty($image['fichier_image'])) {
-                        echo '<img src="../uploads/' . ($image['fichier_image']) . '" alt="' . ($image['nom_image']) . '" style="width:100px; height:auto; margin-bottom:10px;">';
+                        echo '<img src="../uploads/' . htmlspecialchars($image['fichier_image']) . '" alt="' . htmlspecialchars($image['nom_image']) . '" style="width:100px; height:auto; margin-bottom:10px;">';
                     }
 
-                    $stmtStatut = mysqli_prepare($conn, "SELECT date_retour FROM Cat_emprunt WHERE id_objet = ? ORDER BY id_emprunt DESC LIMIT 1");
+                    // Statut et date de retour prévue
+                    $stmtStatut = mysqli_prepare($conn, "SELECT date_retour, date_retour_prevu FROM Cat_emprunt WHERE id_objet = ? ORDER BY id_emprunt DESC LIMIT 1");
                     mysqli_stmt_bind_param($stmtStatut, 'i', $obj['id_objet']);
                     mysqli_stmt_execute($stmtStatut);
                     $resStatut = mysqli_stmt_get_result($stmtStatut);
                     $statutData = mysqli_fetch_assoc($resStatut);
 
                     $isEmprunte = ($statutData && $statutData['date_retour'] === null);
-                    $dateRetour = null;
-
-                    if ($isEmprunte) {
-                        $stmtDate = mysqli_prepare($conn, "SELECT date_retour FROM Cat_emprunt WHERE id_objet = ? AND date_retour IS NULL ORDER BY id_emprunt DESC LIMIT 1");
-                        mysqli_stmt_bind_param($stmtDate, 'i', $obj['id_objet']);
-                        mysqli_stmt_execute($stmtDate);
-                        $resDate = mysqli_stmt_get_result($stmtDate);
-                        $dataDate = mysqli_fetch_assoc($resDate);
-                        $dateRetour = $dataDate['date_retour'] ?? null;
-                    }
+                    $dateRetourPrevu = $statutData['date_retour_prevu'] ?? null;
                     ?>
 
-                    <h3><?= ($obj['nom_objet']) ?></h3>
-                    <p><strong>Catégorie :</strong> <?= ($obj['nom_categorie']) ?></p>
-                    <p><strong>Propriétaire :</strong> <?= ($obj['nom_proprietaire']) ?></p>
+                    <h3><?= htmlspecialchars($obj['nom_objet']) ?></h3>
+                    <p><strong>Catégorie :</strong> <?= htmlspecialchars($obj['nom_categorie']) ?></p>
+                    <p><strong>Propriétaire :</strong> <?= htmlspecialchars($obj['nom_proprietaire']) ?></p>
+
+                    <?php if (!$isEmprunte): ?>
+                        <form method="post" action="">
+                            <input type="hidden" name="id_objet" value="<?= $obj['id_objet'] ?>">
+                            <label for="duree_<?= $obj['id_objet'] ?>">Durée (jours) :</label>
+                            <input type="number" min="1" max="30" name="duree" id="duree_<?= $obj['id_objet'] ?>" required>
+                            <button type="submit" name="emprunter" class="btn">Emprunter</button>
+                        </form>
+                    <?php endif; ?>
 
                     <p class="statut <?= $isEmprunte ? 'emprunte' : 'disponible' ?>">
                         <?= $isEmprunte ? 'Emprunté' : 'Disponible' ?>
-                        <?php if ($isEmprunte && $dateRetour): ?>
-                            <br><small>Date de retour : <?= date('d/m/Y', strtotime($dateRetour)) ?></small>
+                        <?php if ($isEmprunte && $dateRetourPrevu): ?>
+                            <br><small>Date de retour prévue : <?= date('d/m/Y', strtotime($dateRetourPrevu)) ?></small>
                         <?php endif; ?>
                     </p>
                 </div>
