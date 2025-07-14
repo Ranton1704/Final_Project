@@ -16,7 +16,7 @@ if ($idCategorie > 0 && $nomImageCustom !== '' && $image && $image['error'] === 
         exit;
     }
 
-    // Chemin absolu pour éviter les erreurs
+    
     $uploadDir = __DIR__ . '/../uploads/';
     if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
         echo "❌ Dossier uploads inexistant ou non accessible.";

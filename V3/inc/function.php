@@ -18,7 +18,6 @@ function initialiser()
 {
     
 
-    // Sécurité : redirection si la session n’est pas active
     if (!isset($_SESSION['id_membre'])) {
         header("Location: ../page/Login.php");
         exit;
@@ -26,7 +25,6 @@ function initialiser()
 
     $conn = dbconnect();
 
-    // Récupération des catégories
     $catResult = mysqli_query($conn, "SELECT * FROM Cat_categorie_objet");
     $categories = [];
     if ($catResult) {
@@ -35,7 +33,6 @@ function initialiser()
         }
     }
 
-    // Traitement du filtre (assainir)
     $filtre = isset($_GET['categorie']) && is_numeric($_GET['categorie']) ? intval($_GET['categorie']) : '';
     $objets = [];
 

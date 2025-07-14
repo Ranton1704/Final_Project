@@ -8,7 +8,6 @@ $categories = $init['categories'];
 $filtre = $init['filtre'];
 $objets = $init['objets'];
 
-// TRAITEMENT DU FORMULAIRE D’EMPRUNT
 if (
     isset($_POST['emprunter'], $_POST['id_objet'], $_POST['duree'])
     && isset($_SESSION['id_membre'])
@@ -17,7 +16,6 @@ if (
     $duree = intval($_POST['duree']);
     $id_membre = intval($_SESSION['id_membre']);
 
-    // Vérifier que l'objet n'est pas déjà emprunté
     $req = mysqli_prepare($conn, "SELECT 1 FROM Cat_emprunt WHERE id_objet=? AND date_retour IS NULL");
     mysqli_stmt_bind_param($req, 'i', $id_objet);
     mysqli_stmt_execute($req);
@@ -126,7 +124,6 @@ if (
             <?php foreach ($objets as $obj): ?>
                 <div class="card">
                     <?php
-                    // Image
                     $stmt = mysqli_prepare($conn, "SELECT fichier_image, nom_image FROM Cat_images_categorie WHERE id_categorie = ? LIMIT 1");
                     mysqli_stmt_bind_param($stmt, 'i', $obj['id_categorie']);
                     mysqli_stmt_execute($stmt);
@@ -137,7 +134,6 @@ if (
                         echo '<img src="../uploads/' . htmlspecialchars($image['fichier_image']) . '" alt="' . htmlspecialchars($image['nom_image']) . '" style="width:100px; height:auto; margin-bottom:10px;">';
                     }
 
-                    // Statut et date de retour prévue
                     $stmtStatut = mysqli_prepare($conn, "SELECT date_retour, date_retour_prevu FROM Cat_emprunt WHERE id_objet = ? ORDER BY id_emprunt DESC LIMIT 1");
                     mysqli_stmt_bind_param($stmtStatut, 'i', $obj['id_objet']);
                     mysqli_stmt_execute($stmtStatut);
