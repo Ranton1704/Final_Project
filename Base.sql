@@ -31,12 +31,13 @@ CREATE TABLE Cat_objet (
 );
 
 -- Table images objet
-CREATE TABLE Cat_images_objet (
+CREATE TABLE Cat_images_categorie (
     id_image INT AUTO_INCREMENT PRIMARY KEY,
-    id_objet INT,
+    id_categorie INT NOT NULL,
     nom_image VARCHAR(150),
-    FOREIGN KEY (id_objet) REFERENCES Cat_objet(id_objet)
+    FOREIGN KEY (id_categorie) REFERENCES Cat_categorie_objet(id_categorie)
 );
+
 
 -- Table emprunt
 CREATE TABLE Cat_emprunt (
@@ -128,3 +129,9 @@ INSERT INTO Cat_emprunt (id_objet, id_membre, date_emprunt, date_retour) VALUES
 (36, 3, '2024-07-11', '2024-07-13'),
 (38, 2, '2024-07-12', NULL),
 (40, 1, '2024-07-13', NULL);
+INSERT INTO Cat_images_categorie (id_categorie, nom_image, fichier_image) VALUES
+(1, '1.jpg' ,''),
+(2, '2.jpg' ,''),
+(3, '3.jpg' ,''),
+(4, '4.jpg' ,'');
+Alter table Cat_images_categorie add fichier_image varchar(150) not null;

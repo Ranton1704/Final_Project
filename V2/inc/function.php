@@ -16,7 +16,7 @@ function dbconnect()
 
 function initialiser()
 {
-    session_start();
+    
 
     // Sécurité : redirection si la session n’est pas active
     if (!isset($_SESSION['id_membre'])) {
